@@ -17,12 +17,15 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Index() => View(_context.Filmes);
 
-        public IActionResult Detalhes(int id) => View(_context.Filmes.Find(id));
-
+        public IActionResult Detalhes(int id)
+        {
+            if (id == null) return View("NotFound");
+            return View(_context.Filmes.Find(id));
+        }
         public IActionResult Criar() => View();
 
         [HttpPost]
-        IActionResult Criar(PostFilmeDTO filmeDto)
+        public IActionResult Criar(PostFilmeDTO filmeDto)
         {
             Filme filme = new Filme
                 (
@@ -30,37 +33,44 @@ namespace IngressoMVC.Controllers
                     filmeDto.Descricao,
                     filmeDto.Preco,
                     filmeDto.ImageURL,
+                    //filmeDto.CinemaId,
+                    _context.Cinemas
+                        .FirstOrDefault(c => c.Id == filmeDto.CinemaId).Id,
                     _context.Produtores
                         .FirstOrDefault(x => x.Id == filmeDto.ProdutorId).Id
+                //filmeDto.ProdutorId
+
                 );
 
             _context.Add(filme);
             _context.SaveChanges();
 
-            foreach (var categoria in filmeDto.Categorias)
-            {
-                int? categoriaId = _context.Categorias.Where(c => c.Nome == categoria).FirstOrDefault().Id;
+            //foreach (var categoria in filmeDto.Categorias)
+            //{
+            //    int? categoriaId = _context.Categorias.Where(c => c.Id == categoria).FirstOrDefault().Id;
 
-                if (categoriaId != null)
-                {
-                    var novaCategoria = new FilmeCategoria(filme.Id, categoriaId.Value);
-                    _context.FilmesCategorias.Add(novaCategoria);
-                    _context.SaveChanges();
-                }
-            }
+            //    if (categoriaId != null)
+            //    {
+            //        var novaCategoria = new FilmeCategoria(filme.Id, categoriaId.Value);
+            //        _context.FilmesCategorias.Add(novaCategoria);
+            //        _context.SaveChanges();
+            //    }
+            //}
 
-            foreach (var atorId in filmeDto.AtoresId)
-            {
-                var novoAtor = new AtorFilme(atorId, filme.Id);
-                _context.AtoresFilmes.Add(novoAtor);
-                _context.SaveChanges();
-            }
+            //foreach (var atorId in filmeDto.AtoresId)
+            //{
+            //    var novoAtor = new AtorFilme(atorId, filme.Id);
+            //    _context.AtoresFilmes.Add(novoAtor);
+            //    _context.SaveChanges();
+            //}
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Atualizar(int id)
         {
+            if (id == null) return View("NotFound");
+
             var result = _context.Filmes.FirstOrDefault(x => x.Id == id);
 
             if (result == null)
@@ -103,6 +113,7 @@ namespace IngressoMVC.Controllers
         [HttpPost, ActionName("Deletar")]
         public IActionResult ConfirmarDeletar(int id)
         {
+            if (id == null) return View("NotFound");
             var result = _context.Filmes.FirstOrDefault(x => x.Id == id);
 
             _context.Remove(result);

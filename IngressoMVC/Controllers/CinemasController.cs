@@ -1,6 +1,7 @@
 ﻿using IngressoMVC.Data;
 using IngressoMVC.Models;
 using IngressoMVC.Models.ViewModels.RequestDTO;
+using IngressoMVC.Models.ViewModels.ResponseDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -23,14 +24,24 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Detalhes(int id)
         {
+            if (id == null) return View("NotFound");
+
             var cinema = _context.Cinemas
                 .Include(c => c.Filmes)
                 .FirstOrDefault(c => c.Id == id);
 
+            GetCinemaDTO cinemaDTO = new GetCinemaDTO()
+            {
+                Nome = cinema.Nome,
+                Descricao = cinema.Descricao,
+                LogoURL = cinema.LogoURL,
+                Filmes = cinema.Filmes.ToList()
+            };
+
             if (cinema == null)
                 return View("NotFound");
 
-            return View(cinema);
+            return View(cinemaDTO);
         }
 
         public IActionResult Criar()

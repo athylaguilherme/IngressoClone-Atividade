@@ -21,10 +21,11 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Detalhes(int id)
         {
+            if (id == null) return View("NotFound");
             var resultado = _context.Produtores.Include(p => p.Filmes).FirstOrDefault(p => p.Id == id);
 
             if (resultado == null)
-                return View();
+                return View("NotFound");
 
             GetAtorDto atorDTO = new GetAtorDto()
             {
@@ -63,12 +64,12 @@ namespace IngressoMVC.Controllers
         public IActionResult Atualizar(int? id)
         {
             if(id == null)
-                return NotFound();
+                return View("NotFound");
 
             var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
             
             if(result == null)
-                return View();
+                return View("NotFound");
 
             return View(result);
         }
@@ -94,7 +95,7 @@ namespace IngressoMVC.Controllers
             var result = _context.Produtores.FirstOrDefault(p => p.Id == id);
 
             if(result == null)
-                return View();
+                return View("NotFound");
 
             return View(result);
         }

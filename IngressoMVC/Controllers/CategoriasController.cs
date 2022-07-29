@@ -1,7 +1,9 @@
 ﻿using IngressoMVC.Data;
 using IngressoMVC.Models;
 using IngressoMVC.Models.ViewModels.RequestDTO;
+using IngressoMVC.Models.ViewModels.ResponseDTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace IngressoMVC.Controllers
@@ -17,8 +19,20 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Index() => View(_context.Categorias);
 
-        public IActionResult Detalhes(int id) => View(_context.Categorias.Find(id));
+        public IActionResult Detalhes(int id) {
+            if (id == null) return View("NotFound");
 
+            var resultado = _context.Categorias
+                .FirstOrDefault(c => c.Id == id);
+
+            GetCategoriasDTO categoriaDTO = new GetCategoriasDTO()
+            {
+              Nome = resultado.Nome
+              
+            };
+
+            return View(categoriaDTO);
+        }
         public IActionResult Criar() => View();
 
         [HttpPost]
@@ -33,11 +47,11 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Atualizar(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null) return View("NotFound");
 
             var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
 
-            if (result == null) return View();          
+            if (result == null) return View("NotFound");          
             
             return View(result);
         }
@@ -58,14 +72,16 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Deletar(int id)
         {
+            if (id == null) return View("NotFound");
             var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
-            if (result == null) return View();
+            if (result == null) return View("NotFound");
             return View(result);
         }
 
         [HttpPost]
         public IActionResult ConfirmarDeletar(int id)
         {
+            if (id == null) return View("NotFound");
             var result = _context.Categorias.FirstOrDefault(a => a.Id == id);
             _context.Categorias.Remove(result);
             _context.SaveChanges();

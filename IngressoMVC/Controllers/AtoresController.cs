@@ -24,13 +24,17 @@ namespace IngressoMVC.Controllers
 
         public IActionResult Detalhes(int id)
         {
+            if (id == null)
+                return View("NotFound");
+           
+           
             var resultado = _context.Atores
                 .Include(af => af.AtoresFilmes)
                 .ThenInclude(f => f.Filme)
                 .FirstOrDefault(ator => ator.Id == id);
 
             if (resultado == null)
-                return View();
+                return View("NotFound");
 
             GetAtorDto atorDTO = new GetAtorDto()
             {
@@ -57,6 +61,7 @@ namespace IngressoMVC.Controllers
             Ator ator = new Ator(atorDto.Nome, atorDto.Bio, atorDto.FotoPerfilURL);
             _context.Atores.Add(ator);
             _context.SaveChanges();
+   
             
             return RedirectToAction(nameof(Index));
         }
@@ -64,12 +69,12 @@ namespace IngressoMVC.Controllers
         public IActionResult Atualizar(int? id)
         {
             if (id == null)
-                return NotFound();
+                return View("NotFound");
 
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);
 
             if (result == null)
-                return View();
+                return View("NotFound");
 
             return View(result);
         }
@@ -94,7 +99,7 @@ namespace IngressoMVC.Controllers
         {
             var result = _context.Atores.FirstOrDefault(a => a.Id == id);
 
-            if (result == null) return View();
+            if (result == null) return View("NotFound");
 
             return View(result);
         }

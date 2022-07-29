@@ -1,1 +1,63 @@
-<h1>Criar novo</h1>
+
+@model  IngressoMVC.Models.ViewModels.RequestDTO.PostFilmeDTO  
+
+@{
+    ViewData["Title"] = "Adicionar Filme";
+}
+
+<div class="container">
+    <div class="row text">
+        <div class="col-md-8 offset-2">
+            <p>
+                <h1 class="text-center">Adiciona Filmes</h1>
+            </p>
+            <div class="row">
+                <div class="col-md-8 offset-2">
+                    <form asp-action="Criar">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Titulo" class="control-label">Titulo</label>
+                            <input asp-for="Titulo" class="form-control" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Descricao" class="control-label">Descricao</label>
+                            <input asp-for="Descricao" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Preco" class="control-label">Preco</label>
+                            <input asp-for="Preco" class="form-control" />
+                            <span asp-validation-for="Preco" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ImageURL" class="control-label">Capa do Filme(URL)</label>
+                            <input asp-for="ImageURL" class="form-control" />
+                            <span asp-validation-for="ImageURL" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CinemaId" class="control-label">Id do Cinema</label>
+                            <input asp-for="CinemaId" class="form-control" />
+                            <span asp-validation-for="CinemaId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ProdutorId" class="control-label">Id do Produtor</label>
+                            <input asp-for="ProdutorId" class="form-control" />
+                            <span asp-validation-for="ProdutorId" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <input type="submit" value="Criar" class="btn btn-outline-success float-right" />
+                            <a class="btn btn-outline-secondary" asp-action="Index">Listar Todos</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
